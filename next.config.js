@@ -1,5 +1,5 @@
-const path = require('path')
-const CopyPlugin = require('copy-webpack-plugin')
+const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   webpack: (config) => {
     config.plugins.push(
@@ -8,13 +8,14 @@ module.exports = {
           {
             from: path.join(
               __dirname,
-              'node_modules/ionicons/dist/ionicons/svg'
+              "node_modules/ionicons/dist/ionicons/svg"
             ),
-            to: path.join(__dirname, 'public/svg'),
+            to: path.join(__dirname, "public/svg"),
           },
         ],
       })
-    )
-    return config
+    );
+    return config;
   },
-}
+  typescript: { ignoreBuildErrors: true },
+};

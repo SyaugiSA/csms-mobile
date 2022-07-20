@@ -1,21 +1,18 @@
-import {
-  Assessment,
-  Home as HomeIcon,
-  QrCode,
-  Scanner,
-} from "@mui/icons-material";
-import { Box } from "@mui/system";
+import { Assessment, Home as HomeIcon, QrCode } from "@mui/icons-material";
+import { Button, ButtonGroup } from "@mui/material";
 
 export default function Footer() {
   return (
-    <Box
-      flex={1}
-      justifyContent="space-around"
-      sx={{ background: "#5A290B", width: "100%" }}
-    >
-      <HomeIcon sx={{ fill: "#fff", width: "30%", height: 40 }} />
-      <QrCode sx={{ fill: "#fff", width: "30%", height: 40 }} />
-      <Assessment sx={{ fill: "#fff", width: "30%", height: 40 }} />
-    </Box>
+    <ButtonGroup sx={{ background: "#5A290B", width: "100%" }}>
+      <Button href="/" sx={{ width: "100%" }}>
+        <HomeIcon sx={{ fill: "#fff", width: 60, height: 60 }} />
+      </Button>
+      <Button sx={{ width: "100%" }}>
+        <QrCode sx={{ fill: "#fff", width: 60, height: 60 }} />
+      </Button>
+      <Button sx={{ width: "100%" }}>
+        <Assessment sx={{ fill: "#fff", width: 60, height: 60 }} />
+      </Button>
+    </ButtonGroup>
   );
 }

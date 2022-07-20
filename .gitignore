@@ -40,3 +40,6 @@ public/svg
 *.tsbuildinfo
 
 /mockup
+/android
+/resources/android
+package-lock.json

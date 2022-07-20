@@ -1,20 +1,40 @@
 import { Add } from "@mui/icons-material";
-import { Box, IconButton, List, Typography } from "@mui/material";
-import Image from "next/image";
+import {
+  Box,
+  Button,
+  IconButton,
+  List,
+  Modal,
+  TextField,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Home() {
-  const data = [
-    { nama: "sapi 1", hr: 20, url: "/sapi/1" },
-    { nama: "sapi 2", hr: 30, url: "/sapi/2" },
-    { nama: "sapi 3", hr: 40, url: "/sapi/3" },
-    { nama: "sapi 4", hr: 50, url: "/sapi/4" },
-    { nama: "sapi 5", hr: 60, url: "/sapi/5" },
-    { nama: "sapi 6", hr: 70, url: "/sapi/6" },
-    { nama: "sapi 7", hr: 80, url: "/sapi/7" },
-    { nama: "sapi 8", hr: 90, url: "/sapi/7" },
-    { nama: "sapi 9", hr: 100, url: "/sapi/9" },
-  ];
+  const [data, setData] = useState([]);
+  const [addModal, setAddModal] = useState(false);
+  const [second, setSecond] = useState();
+
+  const handleAdd = () => setAddModal(!addModal);
+  const { register, handleSubmit, reset } = useForm();
+  const onSubmit = (data, e) => {
+    axios.post("https://api-csms.herokuapp.com/device/", data);
+    setAddModal(!addModal);
+  };
+
+  const onError = (errors, e) => console.log(errors, e);
+
+  useEffect(() => {
+    let timer = setInterval(() => {
+      axios
+        .get("https://api-csms.herokuapp.com/device/")
+        .then((val) => setData(val.data.data));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <Box sx={{ height: "100%", background: "#E4E4E4" }}>
@@ -23,7 +43,7 @@ export default function Home() {
           background: "#924416",
           borderRadius: 20,
           width: "200%",
-          height: "45%",
+          height: "40%",
           position: "relative",
           top: "-15%",
         }}
@@ -54,11 +74,11 @@ export default function Home() {
           top: "-10%",
           width: "70%",
           mx: "auto",
-          height: "45%",
+          height: "52%",
         }}
       >
         {data.map((val) => (
-          <Link href={val.url}>
+          <Link href={`/sapi/${val.id}`}>
             <Box
               sx={{
                 display: "flex",
@@ -71,32 +91,30 @@ export default function Home() {
               <List
                 sx={{
                   display: "flex",
-                  justifyContent: "space-around",
-                  width: "100%",
+                  justifyContent: "space-between",
+                  width: "90%",
                 }}
               >
                 <Box></Box>
-                <Typography variant="h6">{val.nama}</Typography>
-                <Box
+                <Typography variant="h6" sx={{ py: 1 }}>
+                  {val.nama}
+                </Typography>
+
+                <Typography
+                  variant="h6"
                   sx={{
                     borderRadius: 100,
+                    color: "#ffff",
                     background:
-                      val.hr < 55 || val.hr > 80 ? "#CA0204" : "#26D000",
-                    width: "15%",
-                    height: "100%",
+                      val.heart_rate < 55 || val.heart_rate > 80
+                        ? "#CA0204"
+                        : "#26D000",
+                    py: 1,
+                    px: 1,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      mx: "auto",
-                      width: val.hr < 100 ? "70%" : "100%",
-                      color: "#ffff",
-                    }}
-                  >
-                    {val.hr}
-                  </Typography>
-                </Box>
+                  {val.heart_rate}
+                </Typography>
               </List>
             </Box>
           </Link>
@@ -108,12 +126,74 @@ export default function Home() {
         sx={{
           background: "#5D2807",
           position: "relative",
-          top: "-3%",
+          top: "-7%",
           left: "77%",
+          width: 70,
+          height: 70,
         }}
+        onClick={handleAdd}
       >
-        <Add sx={{ fill: "#ffff" }} />
+        <Add sx={{ fill: "#ffff", "&:hover": { fill: "#0000" } }} />
       </IconButton>
+
+      <Modal open={addModal} onClose={handleAdd}>
+        <Box
+          sx={{
+            position: "fixed",
+            top: "30%",
+            left: "15%",
+            background: "#fff",
+            width: "70%",
+          }}
+        >
+          <Box sx={{ background: "#5A290B", py: 2 }}>
+            <Typography
+              variant="h5"
+              sx={{ color: "#ffff", width: "max-content", mx: "auto" }}
+            >
+              Tambah Device
+            </Typography>
+          </Box>
+          <form
+            method="post"
+            onReset={() => {
+              setAddModal(!addModal);
+              reset({ nama: null });
+            }}
+            onSubmit={handleSubmit(onSubmit, onError)}
+          >
+            <TextField
+              sx={{
+                my: 2,
+                mx: "auto",
+                display: "flex",
+                justifyContent: "center",
+                width: "80%",
+              }}
+              label="Nama Device"
+              {...register("nama")}
+            />
+
+            <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+              <Button
+                sx={{ my: 3, py: 1, px: 3, position: "relative" }}
+                variant="outlined"
+                type="submit"
+              >
+                Tambah
+              </Button>
+
+              <Button
+                sx={{ my: 3, py: 1, px: 3, position: "relative", color: "red" }}
+                variant="outlined"
+                type="reset"
+              >
+                Batal
+              </Button>
+            </Box>
+          </form>
+        </Box>
+      </Modal>
     </Box>
   );
 }
