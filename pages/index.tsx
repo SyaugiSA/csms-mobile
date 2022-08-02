@@ -30,7 +30,7 @@ export default function Home() {
   useEffect(() => {
     let timer = setInterval(() => {
       axios
-        .get("https://api-csms.herokuapp.com/device/")
+        .get("http://api-csms.herokuapp.com/device/")
         .then((val) => setData(val.data.data));
     }, 1000);
     return () => clearInterval(timer);

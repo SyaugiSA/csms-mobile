@@ -16,8 +16,11 @@ export default function Detail() {
   if (data.sensor !== null) {
     data.sensor?.map((val) => {
       hr.push(val.heart_rate);
-      time.push(val.time);
-      terkini = data.heart_rate[data.heart_rate.length - 1];
+      let date = new Date(val.time);
+      time.push(`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`);
+      terkini = hr[hr.length - 1];
+      console.log(hr);
+      console.log(time);
     });
   } else {
     hr.push(0);
@@ -26,9 +29,12 @@ export default function Detail() {
   }
 
   useEffect(() => {
-    axios
-      .get(`https://api-csms.herokuapp.com/device/${id}`)
-      .then((res) => setData(res.data.data));
+    let timer = setInterval(() => {
+      axios
+        .get(`https://api-csms.herokuapp.com/device/${id}`)
+        .then((res) => setData(res.data));
+    }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -58,7 +64,7 @@ export default function Detail() {
           variant="h3"
           sx={{ position: "relative", top: "-60%", left: "5%", color: "#ffff" }}
         >
-          {data.nama}
+          {data.data.nama}
         </Typography>
       </Box>
 
