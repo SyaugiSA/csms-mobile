@@ -19,8 +19,6 @@ export default function Detail() {
       let date = new Date(val.time);
       time.push(`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`);
       terkini = hr[hr.length - 1];
-      console.log(hr);
-      console.log(time);
     });
   } else {
     hr.push(0);
@@ -64,7 +62,7 @@ export default function Detail() {
           variant="h3"
           sx={{ position: "relative", top: "-60%", left: "5%", color: "#ffff" }}
         >
-          {data.data.nama}
+          {data.data?.nama}
         </Typography>
       </Box>
 
